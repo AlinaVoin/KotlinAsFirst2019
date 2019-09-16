@@ -2,9 +2,6 @@
 
 package lesson2.task1
 
-import javafx.beans.binding.When
-import jdk.vm.ci.aarch64.AArch64.v2
-import jdk.vm.ci.aarch64.AArch64.v3
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import kotlin.math.abs
@@ -69,11 +66,11 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    (age % 10 == 1) and ((age / 10) % 10 != 1) -> "год"
-    (age % 10 == 1) and ((age / 10) % 10 == 1) -> "лет"
-    (age % 10 == 2 or 3 or 4) and ((age/10)%10 != 1) -> "года"
-    (age % 10 == 2 or 3 or 4) and ((age/10)%10 == 1) -> "лет"
-    else -> "лет"
+    (age % 10 == 2 || age % 10 == 3 || age % 10 == 4) && ((age / 10) % 10 == 1) -> "age лет"
+    (age % 10 == 1) && ((age / 10) % 10 != 1) -> "age год"
+    (age % 10 == 1) && ((age / 10) % 10 == 1) -> "age лет"
+    (age % 10 == 2 || age % 10 == 3 || age % 10 == 4) -> "age года"
+    else -> "age лет"
 }
 
 /**
@@ -89,11 +86,11 @@ fun timeForHalfWay(
     t3: Double, v3: Double
 ): Double {
     val sHalf = ((t1 * v1) + (t2 * v2) + (t3 * v3)) / 2
-    var tHalf: Double
+    val tHalf: Double
     when {
         (sHalf <= (t1 * v1)) -> tHalf = sHalf / v1
-        ((sHalf > t1 * v1) and (sHalf <= t1 * v1 + t2 * v2)) -> tHalf = t1 + ((sHalf - t1 * v1) / v2)
-        else -> tHalf = (t1+t2+(sHalf-t1 * v1-t2 * v2) / v3)
+        (sHalf <= t1 * v1 + t2 * v2) -> tHalf = t1 + ((sHalf - t1 * v1) / v2)
+        else -> tHalf = (t1 + t2 +(sHalf - t1 * v1 - t2 * v2) / v3)
     }
     return tHalf
 }
@@ -115,13 +112,12 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int = when {
-    (kingY == 1) or (kingY == 8) or (kingX == 1) or (kingX == 8) -> 0
-    (kingX == rookX1) and (kingY != rookY1) and (kingX != rookX2) and (kingY != rookY2) -> 1
-    (kingX != rookX1) and (kingY == rookY1) and (kingX != rookX2) and (kingY != rookY2) -> 1
-    (kingX == rookX2) and (kingY != rookY2) and (kingX != rookX1) and (kingY != rookY1) -> 2
-    (kingX != rookX2) and (kingY == rookY2) and (kingX != rookX1) and (kingY != rookY1) -> 2
-    (kingX == rookX1) and (kingY != rookY1) and (kingX == rookX2) and (kingY != rookY2) and (abs(rookY1 - rookY2) >1) -> 3
-    (kingX != rookX1) and (kingY == rookY1) and (kingX != rookX2) and (kingY == rookY2) and (abs(rookX1 - rookX2) >1) -> 3
+    (kingX == rookX1) && (kingX != rookX2) && (kingY != rookY2) -> 1
+    (kingY == rookY1) && (kingX != rookX2) && (kingY != rookY2) -> 1
+    (kingX == rookX2) && (kingX != rookX1) && (kingY != rookY1) -> 2
+    (kingY == rookY2) && (kingX != rookX1) && (kingY != rookY1) -> 2
+    (kingX == rookX1) && (kingX == rookX2) -> 3
+    (kingY == rookY1) && (kingY == rookY2) -> 3
     else -> 0
 }
 
@@ -140,12 +136,11 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int = when {
-    (kingY == 1) or (kingY == 8) or (kingX == 1) or (kingX == 8) -> 0
-    (kingX == rookX) and (kingY != rookY) and (abs(kingX - bishopX) != abs(kingY - bishopY)) -> 1
-    (kingX != rookX) and (kingY == rookY) and (abs(kingX - bishopX) != abs(kingY - bishopY)) -> 1
+    (kingX == rookX) && (abs(kingX - bishopX) != abs(kingY - bishopY)) -> 1
+    (kingY == rookY) && (abs(kingX - bishopX) != abs(kingY - bishopY)) -> 1
     abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
-    (kingX == rookX) and (kingY != rookY) and (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
-    (kingX != rookX) and (kingY == rookY) and (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
+    (kingX == rookX) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
+    (kingY == rookY) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
     else -> 0
 }
 
@@ -157,12 +152,32 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = when {
-    sqr(a) + sqr(b) > sqr(c) -> 0
-    sqr(a) + sqr(b) == sqr(c) -> 1
-    sqr(a) + sqr(b) < sqr(c) -> 2
-    else -> -1
-}
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    if ((a < (b + c)) && (b < (a + c)) && (c < (a + b))) {
+        if (a > b) {
+            if (a > c) when {
+                (sqr(b) + sqr(c) < sqr(a)) -> 2
+                (sqr(b) + sqr(c) > sqr(a)) -> 0
+                else -> 1
+            }
+                else when {
+                (sqr(b) + sqr(a) < sqr(c)) -> 2
+                (sqr(b) + sqr(a) > sqr(c)) -> 0
+                else -> 1
+            }
+              else (if (b > c)) when {
+                (sqr(a) + sqr(c) < sqr(b)) -> 2
+                (sqr(a) + sqr(c) > sqr(b)) -> 0
+                else -> 1
+            }
+            else when {
+                (sqr(b) + sqr(a) < sqr(c)) -> 2
+                (sqr(b) + sqr(a) > sqr(c)) -> 0
+                else -> 1
+            }
+        }
+        }
+    }
 
 /**
  * Средняя
@@ -173,10 +188,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = when {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
-    (c < b) and (a < c) and (d > b) and (a != b) and (c != d) -> abs(b - c)
-    (d > a) and (d < b) and (c < a) and (a != b) and (c != d) -> abs(d - a)
-    (c < a) and (c < b) and (d > a) and (d > b) and (a != b) and (c != d) -> abs(b - a)
-    (a < c) and (a < d) and (b > c) and (b > d) and (a != b) and (c != d) -> abs(d - c)
+    (c < b) and (a < c) and (d > b) -> b - c
+    (d > a) and (d < b) and (c < a) -> d - a
+    (c < a) and (c < b) and (d > a) and (d > b) -> b - a
+    (a < c) and (a < d) and (b > c) and (b > d) -> d - c
     else -> -1
 }
 
