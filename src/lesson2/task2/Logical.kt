@@ -3,7 +3,7 @@
 package lesson2.task2
 
 import lesson1.task1.sqr
-import kotlin.math.abs
+import kotlin.math.*
 
 /**
  * Пример
@@ -31,7 +31,7 @@ fun isNumberHappy(number: Int): Boolean =
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = when {
-    (x1 == x2) && (y1 != y2) || (x1 != x2) && (y1 == y2) -> true
+    (x1 == x2) || (y1 == y2) -> true
     (abs(x1 - x2)) == (abs(y1 - y2)) -> true
     else -> false
 }
@@ -43,11 +43,10 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = when {
  * Дан номер месяца (от 1 до 12 включительно) и год (положительный).
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
-fun daysInMonth(month: Int, year: Int): Int {
-    if ((month == 1) || (month == 3) || (month == 5) || (month == 7) || (month == 8) || (month == 10) || (month == 12)) return 31
-    if ((month == 4) || (month == 6) || (month == 9) || (month == 11)) return 30
-    if ((month == 2) && (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0)) return 29
-    else return 28
+fun daysInMonth(month: Int, year: Int): Int = when {
+    month in 8..12 -> 31 - month % 2
+    month == 2 -> if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0)) 29 else 28
+    else -> 30 + month % 2
 }
 
 /**
@@ -72,6 +71,12 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
-    ((a <= r) && (b <= s)) || ((b <= r) && (a <= s)) || ((a <= r) && (c <= s)) || ((c <= r) && (a <= s)) || ((b <= r) && (c <= s)) || ((c <= r) && (b <= s))
-
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    val smallest = minOf(a, b, c)
+    val normal = when (smallest) {
+        a -> min(b, c)
+        b -> min(a, c)
+        else -> min(a, b)
+    }
+    return ((smallest <= r) && (normal <= s) || (smallest <= s) && (normal <= r))
+}

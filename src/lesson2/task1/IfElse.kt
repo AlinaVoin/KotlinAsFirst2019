@@ -1,4 +1,3 @@
-
 package lesson2.task1
 
 import lesson1.task1.discriminant
@@ -65,10 +64,9 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    (age % 10 == 2 || age % 10 == 3 || age % 10 == 4) && ((age / 10) % 10 == 1) -> "$age лет"
+    ((age % 10 in 2..4) && ((age / 10) % 10 == 1)) -> "$age лет"
+    (age % 10 in 2..4) -> "$age года"
     (age % 10 == 1) && ((age / 10) % 10 != 1) -> "$age год"
-    (age % 10 == 1) && ((age / 10) % 10 == 1) -> "$age лет"
-    (age % 10 == 2 || age % 10 == 3 || age % 10 == 4) -> "$age года"
     else -> "$age лет"
 }
 
@@ -86,15 +84,13 @@ fun timeForHalfWay(
 ): Double {
     val sHalf = ((t1 * v1) + (t2 * v2) + (t3 * v3)) / 2
     val tHalf: Double
-    when {
-        (sHalf <= (t1 * v1)) -> tHalf = sHalf / v1
-        (sHalf <= t1 * v1 + t2 * v2) -> tHalf = t1 + ((sHalf - t1 * v1) / v2)
-        else -> tHalf = (t1 + t2 +(sHalf - t1 * v1 - t2 * v2) / v3)
+    tHalf = when {
+        (sHalf <= (t1 * v1)) -> sHalf / v1
+        (sHalf <= t1 * v1 + t2 * v2) -> t1 + ((sHalf - t1 * v1) / v2)
+        else -> (t1 + t2 + (sHalf - t1 * v1 - t2 * v2) / v3)
     }
     return tHalf
 }
-
-
 
 
 /**
@@ -111,11 +107,9 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int = when {
-    (kingX == rookX1) && (kingX != rookX2) && (kingY != rookY2) -> 1
-    (kingY == rookY1) && (kingX != rookX2) && (kingY != rookY2) -> 1
-    (kingX == rookX2) && (kingX != rookX1) && (kingY != rookY1) -> 2
-    (kingY == rookY2) && (kingX != rookX1) && (kingY != rookY1) -> 2
-    ((kingX == rookX1) ||(kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2)) -> 3
+    ((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2)) -> 3
+    ((kingX == rookX1) && (kingY != rookY2) || (kingY == rookY1) && (kingX != rookX2)) -> 1
+    ((kingX == rookX2) && (kingY != rookY1) || (kingY == rookY2) && (kingX != rookX1)) -> 2
     else -> 0
 }
 
@@ -134,11 +128,9 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int = when {
-    (kingX == rookX) && (abs(kingX - bishopX) != abs(kingY - bishopY)) -> 1
-    (kingY == rookY) && (abs(kingX - bishopX) != abs(kingY - bishopY)) -> 1
-    ((kingX == rookX) || (kingY == rookY)) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
     ((kingX == rookX) || (kingY == rookY)) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
     abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
+    (kingX == rookX) || (kingY == rookY) -> 1
     else -> 0
 }
 
@@ -150,7 +142,22 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val biggest = maxOf(a, b, c)
+    val smallest = minOf(a, b, c)
+    val normal = when (biggest) {
+        a -> max(b, c)
+        b -> max(a, c)
+        else -> max(a, b)
+    }
+    if (biggest >= smallest + normal) return -1
+    val cosAngle = (sqr(normal) + sqr(smallest) - sqr(biggest)) / (2 * smallest * normal)
+    return when {
+        cosAngle < 0.0 -> 2
+        cosAngle > 0.0 -> 0
+        else -> 1
+    }
+}
 
 /**
  * Средняя
@@ -161,10 +168,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
-    (c <= b) and (a < c) and (d > b) -> b - c
-    (d >= a) and (d < b) and (c < a) -> d - a
-    (c <= a) and (c < b) and (d > a) and (d > b) -> b - a
-    (a <= c) and (a < d) and (b > c) and (b > d) -> d - c
+    (c <= b) && (a < c) && (d > b) -> b - c
+    (d >= a) && (d < b) && (c < a) -> d - a
+    (c <= a) && (c < b) && (d > a) && (d > b) -> b - a
+    (a <= c) && (a < d) && (b > c) && (b > d) -> d - c
     else -> -1
 }
 
