@@ -175,19 +175,8 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-/**
- * У меня почему-то эта программа компилируется бесконечно долго :(
- * fun collatzSteps(x: Int): Int {
-    var count = 0
-    var number = x
-    while (number != 1) {
-        if (x % 2 == 0) number /= 2 else number = 3 * number + 1
-        count += 1
 
-    }
-    return count
-}
-*/
+fun collatzSteps(x: Int): Int = TODO()
 
 
 /**

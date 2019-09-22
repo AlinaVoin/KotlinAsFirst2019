@@ -64,9 +64,9 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    ((age % 10 in 2..4) && ((age / 10) % 10 == 1)) -> "$age лет"
+    ((age / 10) % 10 == 1) -> "$age лет"
     (age % 10 in 2..4) -> "$age года"
-    (age % 10 == 1) && ((age / 10) % 10 != 1) -> "$age год"
+    (age % 10 == 1) -> "$age год"
     else -> "$age лет"
 }
 
@@ -83,13 +83,11 @@ fun timeForHalfWay(
     t3: Double, v3: Double
 ): Double {
     val sHalf = ((t1 * v1) + (t2 * v2) + (t3 * v3)) / 2
-    val tHalf: Double
-    tHalf = when {
+    return when {
         (sHalf <= (t1 * v1)) -> sHalf / v1
         (sHalf <= t1 * v1 + t2 * v2) -> t1 + ((sHalf - t1 * v1) / v2)
         else -> (t1 + t2 + (sHalf - t1 * v1 - t2 * v2) / v3)
     }
-    return tHalf
 }
 
 
@@ -108,8 +106,8 @@ fun whichRookThreatens(
     rookX2: Int, rookY2: Int
 ): Int = when {
     ((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2)) -> 3
-    ((kingX == rookX1) && (kingY != rookY2) || (kingY == rookY1) && (kingX != rookX2)) -> 1
-    ((kingX == rookX2) && (kingY != rookY1) || (kingY == rookY2) && (kingX != rookX1)) -> 2
+    ((kingX == rookX1) || (kingY == rookY1)) -> 1
+    ((kingX == rookX2) || (kingY == rookY2)) -> 2
     else -> 0
 }
 
@@ -168,10 +166,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
-    (c <= b) && (a < c) && (d > b) -> b - c
-    (d >= a) && (d < b) && (c < a) -> d - a
-    (c <= a) && (c < b) && (d > a) && (d > b) -> b - a
-    (a <= c) && (a < d) && (b > c) && (b > d) -> d - c
+    (c <= b) && (a <= c) && (d >= b) -> b - c
+    (d >= a) && (d <= b) && (c <= a) -> d - a
+    (c <= a) && (d >= a) && (d >= b) -> b - a
+    (a <= d) && (b >= c) && (b >= d) -> d - c
     else -> -1
 }
 
