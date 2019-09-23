@@ -98,15 +98,18 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    var net = n
-    var math = m
-    val product = m * n
-    while ((net != 0) && (math != 0)) {
-        if (net > math) net %= math else math %= net
-    }
-    return (product / (net + math))
+
+fun gsd(a: Int, b: Int): Int {
+    var first = a
+    var second = b
+    while (first != 0 && second != 0)
+        if (first > second) first %= second
+        else second %= first
+    return first + second
 }
+
+fun lcm(m: Int, n: Int): Int =
+    m / gsd(m, n) * n
 
 /**
  * Простая
@@ -114,10 +117,9 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var k = 2
-    while (n % k != 0)
-        k += 1
-    return k
+    for (a in 2..sqrt(n.toDouble()).toInt())
+        if (n % a == 0) return a
+    return n
 }
 
 /**
@@ -125,12 +127,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var k = n - 1
-    while (n % k != 0)
-        k -= 1
-    return k
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -139,12 +136,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    val min = minOf(m, n)
-    for (k in 2..min)
-        if ((m % k == 0) && (n % k == 0)) return false
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = gsd(m, n) == 1
 
 /**
  * Простая
@@ -153,11 +145,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    if (m == n) return true
-    if ((sqrt(n.toDouble()).toInt()) - (sqrt(m.toDouble()).toInt()) >= 1) return true
-    return false
-}
+fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
 
 /**
  * Средняя
@@ -176,7 +164,15 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * этого для какого-либо начального X > 0.
  */
 
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var count = 0
+    var number = x
+    while (number != 1) {
+        if (number % 2 == 0) number /= 2 else number = 3 * number + 1
+        count++
+    }
+    return count
+}
 
 
 /**
@@ -208,7 +204,15 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var newN = n
+    var reversedN = 0
+    while (newN > 0) {
+        reversedN = reversedN * 10 + newN % 10
+        newN /= 10
+    }
+    return reversedN
+}
 
 /**
  * Средняя
