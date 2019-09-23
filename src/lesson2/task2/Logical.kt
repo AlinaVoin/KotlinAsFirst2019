@@ -78,5 +78,7 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
         b -> min(a, c)
         else -> min(a, b)
     }
-    return ((smallest <= r) && (normal <= s) || (smallest <= s) && (normal <= r))
+    val biggest = maxOf(r, s)
+    val little = minOf(r, s)
+    return ((normal <= biggest) && (smallest <= little))
 }
