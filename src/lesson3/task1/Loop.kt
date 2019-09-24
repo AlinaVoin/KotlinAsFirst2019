@@ -2,7 +2,8 @@
 
 package lesson3.task1
 
-import kotlin.math.sqrt
+import lesson1.task1.sqr
+import kotlin.math.*
 
 /**
  * Пример
@@ -68,12 +69,12 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var count = 0
-    var number = n
-    do {
+    var count = 1
+    var number = n / 10
+    while (number > 0) {
         count++
         number /= 10
-    } while (number > 0)
+    }
     return count
 }
 
@@ -145,7 +146,13 @@ fun isCoPrime(m: Int, n: Int): Boolean = gsd(m, n) == 1
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    val min = sqrt(m.toDouble()).toInt()
+    val max = sqrt(n.toDouble()).toInt()
+    if (sqr(min) == m) return true
+    if (max - min >= 1) return true
+    return false
+}
 
 /**
  * Средняя
@@ -223,7 +230,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = (revert(n) == n)
 
 /**
  * Средняя
@@ -233,7 +240,15 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    val firstSymbol = n % 10
+    var net = n / 10
+    while (net != 0) {
+        if (firstSymbol != net % 10) return true
+        net /= 10
+    }
+    return false
+}
 
 /**
  * Сложная
