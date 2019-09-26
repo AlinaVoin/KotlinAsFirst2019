@@ -191,7 +191,19 @@ fun collatzSteps(x: Int): Int {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var sin = 0.0
+    val firstX = x % (2 * PI)
+    var degree = 1
+    var fact = 1
+    while (firstX.pow(degree) / factorial(fact) >= eps) {
+        if (fact % 4 == 1) sin += firstX.pow(degree) / factorial(fact)
+        else sin -= firstX.pow(degree) / factorial(fact)
+        fact += 2
+        degree += 2
+    }
+    return sin
+}
 
 /**
  * Средняя
@@ -202,7 +214,19 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var cos = 0.0
+    val firstX = x % (2 * PI)
+    var degree = 0
+    var fact = 0
+    while (firstX.pow(degree) / factorial(fact) >= eps) {
+        if (fact % 4 == 2) cos -= firstX.pow(degree) / factorial(fact)
+        else cos += firstX.pow(degree) / factorial(fact)
+        degree += 2
+        fact += 2
+    }
+    return cos
+}
 
 /**
  * Средняя
