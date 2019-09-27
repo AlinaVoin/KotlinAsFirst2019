@@ -193,14 +193,15 @@ fun collatzSteps(x: Int): Int {
  */
 fun sin(x: Double, eps: Double): Double {
     var sin = 0.0
-    val firstX = x % (2 * PI)
+    var firstX = x % (2 * PI)
     var degree = 1
-    var fact = 1
-    while (firstX.pow(degree) / factorial(fact) >= eps) {
-        if (fact % 4 == 1) sin += firstX.pow(degree) / factorial(fact)
-        else sin -= firstX.pow(degree) / factorial(fact)
-        fact += 2
+    val lonely = -1.0
+    var n = 0
+    while (abs(firstX) >= eps) {
+        firstX = lonely.pow(n) * x.pow(degree) / factorial(degree)
         degree += 2
+        n++
+        sin += firstX
     }
     return sin
 }
