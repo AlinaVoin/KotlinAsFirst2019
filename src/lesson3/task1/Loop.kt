@@ -193,7 +193,7 @@ fun collatzSteps(x: Int): Int {
  */
 fun sin(x: Double, eps: Double): Double {
     var sin = 0.0
-    var firstX = x % (2 * PI)
+    val firstX = x % (2 * PI)
     var degree = 1
     val lonely = -1.0
     var n = 0
@@ -309,7 +309,7 @@ fun fibSequenceDigit(n: Int): Int {
     var number = 2
     var small = 1
     var big = 1
-    var middle = 0
+    var middle: Int
     if (n <= 2) return 1
     while (number < n) {
         middle = big
