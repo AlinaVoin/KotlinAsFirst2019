@@ -220,12 +220,14 @@ fun cos(x: Double, eps: Double): Double {
     var cos = 0.0
     val firstX = x % (2 * PI)
     var degree = 0
-    var fact = 0
-    while (firstX.pow(degree) / factorial(fact) >= eps) {
-        if (fact % 4 == 2) cos -= firstX.pow(degree) / factorial(fact)
-        else cos += firstX.pow(degree) / factorial(fact)
+    val lonely = -1.0
+    var n = 0
+    var mister = 1.0
+    while (abs(mister) >= eps) {
+        mister = lonely.pow(n) * firstX.pow(degree) / factorial(degree)
         degree += 2
-        fact += 2
+        n++
+        cos += mister
     }
     return cos
 }
