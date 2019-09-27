@@ -197,7 +197,7 @@ fun sin(x: Double, eps: Double): Double {
     var degree = 1
     val lonely = -1.0
     var n = 0
-    while (abs(firstX) >= eps) {
+    while (abs(firstX) > eps) {
         firstX = lonely.pow(n) * x.pow(degree) / factorial(degree)
         degree += 2
         n++
