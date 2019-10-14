@@ -119,8 +119,7 @@ fun abs(v: List<Double>): Double {
     var abs = 0.0
     for (i in v)
         abs += i * i
-    abs = sqrt(abs)
-    return abs
+    return sqrt(abs)
 }
 
 /**
@@ -130,13 +129,11 @@ fun abs(v: List<Double>): Double {
  */
 fun mean(list: List<Double>): Double {
     var sum = 0.0
-    var amount = 0
     for (element in list) {
         sum += element
-        amount += 1
     }
     return if (sum == 0.0) 0.0
-    else (sum / amount)
+    else sum / list.size
 }
 
 /**
@@ -178,11 +175,13 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Значение пустого многочлена равно 0 при любом x.
  */
 fun polynom(p: List<Int>, x: Int): Int {
-    var sum = 0
-    if (p.isEmpty()) return 0
-    for (i in p.indices)
-        sum += p[i] * x.toDouble().pow(i).toInt()
-    return sum
+    var result = 0
+    var pDegree = 1
+    for (i in p) {
+        result += i * pDegree
+        pDegree *= x
+    }
+    return result
 }
 
 /**
@@ -243,11 +242,10 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     val list = mutableListOf<Int>()
     var whole = n
-    if (whole == 0) return listOf(0)
-    while (whole != 0) {
+    do {
         list.add(whole % base)
         whole /= base
-    }
+    } while (whole != 0)
     return list.reversed()
 }
 
@@ -264,15 +262,9 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
-    val list = mutableListOf<Char>()
-    var whole = n
-    if (whole == 0) return "0"
-    while (whole > 0) {
-        list.add(alphabet[whole % base])
-        whole /= base
-    }
-    return list.joinToString(separator = "").reversed()
+    return convert(n, base).joinToString(separator = "") { "${alphabet[it]}" }
 }
+
 
 /**
  * Средняя
@@ -296,11 +288,13 @@ fun decimal(digits: List<Int>, base: Int): Int = polynom(digits.reversed(), base
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
-    var count = 0.0
-    for ((amount, i) in (str.length - 1 downTo 0).withIndex())
-        count += alphabet.indexOf(str[i]) * base.toDouble().pow(amount)
-    return count.toInt()
+    var count = 0
+    for (i in str.indices) {
+        count *= base
+        count += if (str[i] in 'a'..'z') str[i] - 'a' + 10
+        else str[i] - '0'
+    }
+    return count
 }
 
 /**
@@ -312,56 +306,30 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
+    val alphabet = mapOf(
+        "M" to 1000,
+        "CM" to 900,
+        "D" to 500,
+        "CD" to 400,
+        "C" to 100,
+        "XC" to 90,
+        "L" to 50,
+        "XL" to 40,
+        "X" to 10,
+        "IX" to 9,
+        "V" to 5,
+        "IV" to 4,
+        "I" to 1
+    )
+    var arabian = n
     val list = mutableListOf<String>()
-    var num = n
-    var a: Int
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("I")
-        2 -> list.add("II")
-        3 -> list.add("III")
-        4 -> list.add("IV")
-        5 -> list.add("V")
-        6 -> list.add("VI")
-        7 -> list.add("VII")
-        8 -> list.add("VIII")
-        9 -> list.add("IX")
+    for ((roman, answer) in alphabet) {
+        while (arabian - answer >= 0) {
+            list.add(roman)
+            arabian -= answer
+        }
     }
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("X")
-        2 -> list.add("XX")
-        3 -> list.add("XXX")
-        4 -> list.add("XL")
-        5 -> list.add("L")
-        6 -> list.add("LX")
-        7 -> list.add("LXX")
-        8 -> list.add("LXXX")
-        9 -> list.add("XC")
-    }
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("C")
-        2 -> list.add("CC")
-        3 -> list.add("CCC")
-        4 -> list.add("CD")
-        5 -> list.add("D")
-        6 -> list.add("DC")
-        7 -> list.add("DCC")
-        8 -> list.add("DCCC")
-        9 -> list.add("CM")
-    }
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("M")
-        2 -> list.add("MM")
-        3 -> list.add("MMM")
-    }
-    return list.reversed().joinToString(separator = "")
+    return list.joinToString(separator = "")
 }
 
 /**
