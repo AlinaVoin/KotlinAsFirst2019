@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import kotlin.math.max
+
 /**
  * Пример
  *
@@ -293,6 +295,7 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 
+
 /**
  * Сложная
  *
@@ -342,4 +345,20 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    var list = listOf<String>()
+    val a = treasures.toSortedMap()
+    var maxSum = 0
+    for ((key, value) in a) {
+        if (value.first <= capacity) {
+            maxSum += value.second
+            list = listOf(key)
+        }
+    }
+    return list.toSet()
+}
+
+
+
+
+
