@@ -2,8 +2,6 @@
 
 package lesson5.task1
 
-import kotlin.math.max
-
 /**
  * Пример
  *
@@ -113,8 +111,8 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((key) in a) {
-        if (a[key] != b[key]) return false
+    for ((key, value) in a) {
+        if (value != b[key]) return false
     }
     return true
 }
@@ -168,7 +166,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     val final = mapA.toMutableMap()
     for ((key, value) in mapB) {
         if (key !in mapA) final[key] = value
-        if (key in mapA && mapA[key] != value) final[key] += ", $value"
+        else if (mapA[key] != value) final[key] += ", $value"
     }
     return final
 }
@@ -192,7 +190,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     }
     for ((key, value) in sum)
         sum[key] = value / count[key]!!
-    return sum.toMap()
+    return sum
 }
 
 /**
@@ -296,7 +294,6 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 
-
 /**
  * Сложная
  *
@@ -315,11 +312,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val final = mutableListOf<Int>()
-    val a = list
-    for (i in list.indices){
+    for (i in list.indices) {
         for (j in ((i + 1) until list.size)){
-            if (a[i] + a[j] == number) return i to j
+            if (list[i] + list[j] == number) return i to j
         }
     }
     return -1 to -1
@@ -346,21 +341,8 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val list = mutableListOf<String>()
-    val a = treasures.toSortedMap()
-    var c = capacity
-    var maxSum = 0
-    for ((key, value) in a) {
-        if (value.first <= c) {
-            maxSum += value.second
-            c -= value.first
-            list += listOf(key)
-        }
-    }
-    return list.toSet()
-}
 
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
 
 
 
