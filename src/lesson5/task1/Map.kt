@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
+
 package lesson5.task1
+import kotlin.math.*
 
 /**
  * Пример
@@ -230,7 +232,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean =
-    (word.toLowerCase().toSet() - chars.map{ it.toLowerCase()}).isEmpty()
+    (word.toLowerCase().toSet() - chars.map { it.toLowerCase() }).isEmpty()
 
 
 /**
@@ -262,12 +264,12 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val final = mutableListOf<String>()
+    val size = words.size
+    val final = mutableSetOf<String>()
     for (element in words)
-        final += element.toSortedSet().toString()
-    return extractRepeats(final).isNotEmpty()
+        final.add(element.toList().sorted().toString())
+    return final.size != size
 }
-
 /**
  * Сложная
  *
@@ -313,7 +315,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in list.indices) {
-        for (j in ((i + 1) until list.size)){
+        for (j in ((i + 1) until list.size)) {
             if (list[i] + list[j] == number) return i to j
         }
     }
@@ -342,8 +344,33 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
-
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    var final = setOf<String>()
+    val weight = mutableListOf<Int>()
+    val price = mutableListOf<Int>()
+    val names = mutableListOf<String>()
+    treasures.forEach { weight.add(it.value.first) }
+    treasures.forEach { price.add(it.value.second) }
+    treasures.forEach { names.add(it.key) }
+    val table = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
+    for (i in 1 until treasures.size + 1) {
+        for (j in 1 until capacity + 1) {
+            if (weight[i - 1] <= j)
+                table[i][j] = max(price[i] + table[i - 1][j - weight[i - 1]], table[i - 1][j])
+            else table[i][j] = table[i - 1][j]
+        }
+    }
+    fun tableFiller(a: Int, b: Int) {
+        if (table[a][b] == 0) return
+        if (table[a - 1][b] == table[a][b]) tableFiller(a - 1, b)
+        else {
+            final = final + (names[a - 1])
+            tableFiller(a - 1, b - weight[a - 1])
+        }
+    }
+    tableFiller(treasures.size, capacity)
+    return final
+}
 
 
 
