@@ -2,6 +2,7 @@
 
 
 package lesson5.task1
+
 import kotlin.math.*
 
 /**
@@ -270,6 +271,7 @@ fun hasAnagrams(words: List<String>): Boolean {
         final.add(element.toList().sorted().toString())
     return final.size != size
 }
+
 /**
  * Сложная
  *
@@ -345,10 +347,12 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    var final = setOf<String>()
+    var cap = capacity
+    var size = treasures.size
+    val names = mutableListOf<String>()
     val weight = mutableListOf<Int>()
     val price = mutableListOf<Int>()
-    val names = mutableListOf<String>()
+    val final = mutableSetOf<String>()
     treasures.forEach { weight.add(it.value.first) }
     treasures.forEach { price.add(it.value.second) }
     treasures.forEach { names.add(it.key) }
@@ -356,21 +360,18 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     for (i in 1 until treasures.size + 1) {
         for (j in 1 until capacity + 1) {
             if (weight[i - 1] <= j)
-                table[i][j] = max(price[i] + table[i - 1][j - weight[i - 1]], table[i - 1][j])
+                table[i][j] = max(table[i - 1][j], table[i - 1][j - weight[i - 1]] + price[i - 1])
             else table[i][j] = table[i - 1][j]
         }
     }
-    fun tableFiller(a: Int, b: Int) {
-        if (table[a][b] == 0) return
-        if (table[a - 1][b] == table[a][b]) tableFiller(a - 1, b)
-        else {
-            final = final + (names[a - 1])
-            tableFiller(a - 1, b - weight[a - 1])
+    while ((size > 0) && (cap > 0)) {
+        size--
+        if (table[size + 1][cap] != table[size][cap]) {
+            final.add(names[size])
+            cap -= weight[size]
         }
     }
-    tableFiller(treasures.size, capacity)
     return final
 }
-
 
 
