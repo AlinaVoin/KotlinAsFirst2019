@@ -356,8 +356,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     treasures.forEach { weight.add(it.value.first) }
     treasures.forEach { price.add(it.value.second) }
     treasures.forEach { names.add(it.key) }
-    val table = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
-    for (i in 1 until treasures.size + 1) {
+    val table = Array(size + 1) { Array(capacity + 1) { 0 } }
+    for (i in 1 until size + 1) {
         for (j in 1 until capacity + 1) {
             if (weight[i - 1] <= j)
                 table[i][j] = max(table[i - 1][j], table[i - 1][j - weight[i - 1]] + price[i - 1])
@@ -365,7 +365,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
     }
     while ((size > 0) && (cap > 0)) {
-        size--
+        size -= 1
         if (table[size + 1][cap] != table[size][cap]) {
             final.add(names[size])
             cap -= weight[size]
