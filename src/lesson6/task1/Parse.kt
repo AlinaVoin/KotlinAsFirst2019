@@ -215,8 +215,7 @@ fun plusMinus(expression: String): Int {
     require(exp[0] != "-")
     for (i in exp.indices) {
         if (i % 2 == 0) {
-            require(exp[i] == "${exp[i].toInt()}")
-            require(exp[i].toInt() >= 0)
+            require(exp[i] == "${exp[i].toInt()}" && exp[i].toInt() >= 0)
             sum += exp[i].toInt() * char
         } else when (exp[i]) {
             "+" -> char = 1
@@ -261,7 +260,23 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (description == "") return ""
+    val list = description.split("; ")
+    var a = listOf<String>()
+    var max = 0.0
+    var expensive = String()
+    for (i in list) {
+        a = i.split(" ")
+        if (a.size < 2) return ""
+        val cost = a[1]
+        if (cost.toDouble() > max) {
+            max = cost.toDouble()
+            expensive = a[0]
+        }
+    }
+    return expensive
+}
 
 /**
  * Сложная
