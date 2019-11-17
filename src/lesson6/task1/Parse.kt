@@ -275,6 +275,7 @@ fun mostExpensive(description: String): String {
             expensive = a[0]
         }
     }
+    if (max.toInt() == 0) return "Any good with price 0.0"
     return expensive
 }
 
