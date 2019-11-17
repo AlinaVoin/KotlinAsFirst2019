@@ -263,7 +263,7 @@ fun firstDuplicateIndex(str: String): Int {
 fun mostExpensive(description: String): String {
     if (description == "") return ""
     val list = description.split("; ")
-    var a = listOf<String>()
+    var a: List<String>
     var max = 0.0
     var expensive = String()
     for (i in list) {
