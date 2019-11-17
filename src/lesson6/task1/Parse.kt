@@ -207,7 +207,7 @@ fun bestHighJump(jumps: String): Int? {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    requireNotNull(expression)
+    require(expression != "")
     val exp = expression.split(" ")
     var sum = 0
     var char = 1
