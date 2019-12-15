@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import kotlinx.html.dom.write
 import java.io.File
 
 /**
@@ -53,7 +54,20 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val result = mutableMapOf<String, Int>()
+    val text = File(inputName).readText()
+    substrings.forEach { i ->
+        val a = text.windowed(i.length)
+        result[i] = 0
+        a.forEach { j ->
+            when {
+                i.toLowerCase() == j.toLowerCase() -> result[i] = result[i]!! + 1
+            }
+        }
+    }
+    return result
+}
 
 
 /**
@@ -70,7 +84,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val vowels = mapOf(
+        'ы' to "и",
+        'Ы' to "И",
+        'Ю' to "У",
+        'ю' to "у",
+        'Я' to "А",
+        'я' to "а"
+    )
+    val consonants = listOf('ж', 'Ж', 'ч', 'Ч', 'ш', 'Ш', 'щ', 'Щ')
+    val text = File(inputName).readText()
+
 }
 
 /**
@@ -91,7 +115,19 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    var maximum = 0
+    val text = File(inputName).readLines()
+    text.forEach { line ->
+        if (line.trim().length > maximum)
+            maximum = line.trim().length
+    }
+    File(outputName).bufferedWriter().use {
+        text.forEach { line ->
+            val space = (maximum - line.trim().length) / 2
+            it.write(" ".repeat(space) + line.trim())
+            it.newLine()
+        }
+    }
 }
 
 /**
