@@ -216,8 +216,8 @@ fun plusMinus(expression: String): Int {
     require(exp[0] != "-")
     for (i in exp.indices) {
         if (i % 2 == 0) {
-            require(exp[i] == "${exp[i].toInt()}" && exp[i].toInt() >= 0)
-            sum += exp[i].toInt() * char
+            require(exp[i] == "${exp[i].toIntOrNull()}" && exp[i].toIntOrNull()!! >= 0)
+            sum += exp[i].toIntOrNull()?.times(char)!!
         } else when (exp[i]) {
             "+" -> char = 1
             "-" -> char = -1
@@ -265,7 +265,7 @@ fun mostExpensive(description: String): String {
     if (description == "") return ""
     val list = description.split("; ")
     var a: List<String>
-    var max = 0.0
+    var max = -1.0
     var expensive = String()
     for (i in list) {
         a = i.split(" ")
@@ -276,7 +276,6 @@ fun mostExpensive(description: String): String {
             expensive = a[0]
         }
     }
-    if (max.toInt() == 0) return "Any good with price 0.0"
     return expensive
 }
 
