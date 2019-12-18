@@ -112,7 +112,7 @@ fun sibilants(inputName: String, outputName: String) {
                 append(" ")
             }
         }
-        it.write(str.dropLast(outputName.length - 7))
+        it.write(str.removeSuffix(" "))
     }
 
 }
@@ -200,7 +200,14 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val text = File(inputName).readText().toLowerCase().split(Regex("""[^А-ЯЁа-яёA-Za-z]"""))
+    val res = mutableMapOf<String, Int>()
+    for (word in text) {
+        if (word != "") res[word] = (res[word.toLowerCase()] ?: 0) + 1
+    }
+    return res.toList().sortedByDescending { it.second }.take(20).toMap()
+}
 
 /**
  * Средняя
