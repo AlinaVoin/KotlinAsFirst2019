@@ -2,8 +2,10 @@
 
 package lesson7.task1
 
-import kotlinx.html.dom.write
 import java.io.File
+import java.lang.StringBuilder
+import lesson3.task1.digitNumber
+import lesson5.task1.filterByCountryCode
 
 /**
  * Пример
@@ -83,16 +85,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  * Исключения (жюри, брошюра, парашют) в рамках данного задания обрабатывать не нужно
  *
  */
+val vowels = mapOf(
+    'ы' to "и",
+    'Ы' to "И",
+    'Ю' to "У",
+    'ю' to "у",
+    'Я' to "А",
+    'я' to "а"
+)
+val consonants = setOf('ж', 'Ж', 'ч', 'Ч', 'ш', 'Ш', 'щ', 'Щ')
+
 fun sibilants(inputName: String, outputName: String) {
-    val vowels = mapOf(
-        'ы' to "и",
-        'Ы' to "И",
-        'Ю' to "У",
-        'ю' to "у",
-        'Я' to "А",
-        'я' to "а"
-    )
-    val consonants = listOf('ж', 'Ж', 'ч', 'Ч', 'ш', 'Ш', 'щ', 'Щ')
     val text = File(inputName).readText()
     File(outputName).bufferedWriter().use {
         val str = buildString {
@@ -179,7 +182,36 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    var maxLength = 0
+    val builder = StringBuilder()
+    val lines = File(inputName).readLines().map { it.trim().replace(Regex("\\s+"), " ") }
+    for (line in lines) {
+        if (line.length > maxLength) maxLength = line.length
+    }
+    for (line in lines) {
+        val len = line.length
+        var spaces = line.split(" ").size - 1
+        if (spaces < 1) {
+            builder.append(line + "\n")
+            continue
+        }
+        val add = (maxLength - len) / spaces
+        var mod = (maxLength - len) % spaces
+        for (word in line.split(" ")) {
+            if (mod > 0 && spaces > 0) {
+                builder.append(word + " ".repeat(add + 2))
+                mod--
+                spaces--
+            } else if (mod == 0 && spaces > 0) {
+                builder.append(word + " ".repeat(add + 1))
+                spaces--
+            } else {
+                builder.append(word)
+            }
+        }
+        builder.append("\n")
+    }
+    File(outputName).writeText(builder.toString())
 }
 
 /**
@@ -245,7 +277,19 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val text = File(inputName).readText()
+    val builder = StringBuilder()
+    val map = mutableMapOf<Char, String>()
+    for ((key, value) in dictionary) {
+        map[key.toLowerCase()] = value.toLowerCase()
+    }
+    for (char in text) {
+        if (map.containsKey(char.toLowerCase())) {
+            if (char.isUpperCase()) builder.append(map[char.toLowerCase()]!!.capitalize())
+            else builder.append(map[char.toLowerCase()])
+        } else builder.append(char)
+    }
+    File(outputName).writeText(builder.toString())
 }
 
 /**
@@ -273,8 +317,11 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val words = File(inputName).readLines().filter { it.toLowerCase().toSet().size == it.length }
+    val maxLen = words.map { it.length }.max() ?: -1
+    File(outputName).writeText(words.filter { it.length == maxLen }.joinToString(", "))
 }
+
 
 /**
  * Сложная
@@ -466,7 +513,32 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val answer = lhv * rhv
+    val result = digitNumber(answer) + 1
+
+    val builder = StringBuilder()
+    builder.append(" ".repeat(result - digitNumber(lhv)) + lhv.toString() + "\n")
+    builder.append('*' + " ".repeat(result - digitNumber(rhv) - 1) + rhv.toString() + "\n")
+    builder.append("-".repeat(result) + "\n")
+
+    var num = rhv
+    var multiply = num % 10 * lhv
+    num /= 10
+
+    builder.append(" ".repeat(result - digitNumber(multiply)) + multiply.toString() + "\n")
+
+    var spaces = 2
+    while (num > 0) {
+        multiply = num % 10 * lhv
+        num /= 10
+        builder.append('+' + " ".repeat(result - digitNumber(multiply) - spaces) + multiply.toString() + "\n")
+        spaces++
+    }
+
+    builder.append("-".repeat(result) + "\n")
+    builder.append(" $answer")
+
+    File(outputName).writeText(builder.toString())
 }
 
 

@@ -245,7 +245,7 @@ fun firstDuplicateIndex(str: String): Int {
             return result
         result += previous.length
         previous = current
-        result += 1
+        result++
     }
     return -1
 }
@@ -264,11 +264,10 @@ fun firstDuplicateIndex(str: String): Int {
 fun mostExpensive(description: String): String {
     if (description == "") return ""
     val list = description.split("; ")
-    var a: List<String>
     var max = -1.0
-    var expensive = String()
+    var expensive = ""
     for (i in list) {
-        a = i.split(" ")
+        var a = i.split(" ")
         if (a.size < 2) return ""
         val cost = a[1]
         if (cost.toDouble() > max) {
